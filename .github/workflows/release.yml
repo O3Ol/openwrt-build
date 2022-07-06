@@ -81,11 +81,8 @@ jobs:
 
       - name: Prepare WasmEdge ipk zip
         run: |
-          mkdir -p ./artifact/WasmEdge-ipk
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/packages/ -type f -name "WasmEdge_*.ipk") ./artifact/WasmEdge-ipk
-          cd ./artifact/WasmEdge-ipk
-          zip -q WasmEdge_0.10.0_x86_64-ipk.zip ./WasmEdge_0.10.0_x86_64.ipk
+          cp $(find ./bin/packages/ -type f -name "WasmEdge*.ipk")  ./
+          tar -zcvf WasmEdge_0.10.0_x86_64-ipk.tgz  $(find ./bin/packages/ -type f -name "WasmEdge*.ipk") WasmEdge*
 
       - name: Create Release
         id: create_release
@@ -104,6 +101,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WasmEdge_0.10.0_x86_64-ipk.zip
-          asset_name: WasmEdge_0.10.0_x86_64-ipk.zip
-          asset_content_type: application/zip
+          asset_path: ./WasmEdge_0.10.0_x86_64-ipk.tgz
+          asset_name: WasmEdge_0.10.0_x86_64-ipk.tgz
+          asset_content_type: application/x-tgz
