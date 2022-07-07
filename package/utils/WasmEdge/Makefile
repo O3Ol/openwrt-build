@@ -11,7 +11,7 @@ define Package/$(PKG_NAME)
     SECTION:=base
     CATEGORY:=Runtime
     TITLE:=$(PKG_NAME) -prints a $(PKG_NAME) message
-    DEPENDS:=+libpthread +libubox +libstdcpp +boost +libxml2
+    DEPENDS:=+libpthread +libstdcpp +boost
 endef
 
 define Package/$(PKG_NAME)/description
