@@ -79,10 +79,21 @@ jobs:
           du -h ./ --max-depth=1
           du -h /mnt/openwrt/ --max-depth=1 || true
 
-      - name: Prepare WasmEdge ipk zip
+#       - name: Prepare WasmEdge ipk tgz
+#         run: |
+#           cp $(find ./bin/packages/ -type f -name "WasmEdge*.ipk")  ./
+#           tar -zcvf WasmEdge_0.10.0_x86_64-ipk.tgz  $(find ./bin/packages/ -type f -name "WasmEdge*.ipk") WasmEdge*
+
+      - name: Prepare all generated files tgz
         run: |
-          cp $(find ./bin/packages/ -type f -name "WasmEdge*.ipk")  ./
-          tar -zcvf WasmEdge_0.10.0_x86_64-ipk.tgz  $(find ./bin/packages/ -type f -name "WasmEdge*.ipk") WasmEdge*
+          mkdir -p ./artifact/firmware
+          mkdir -p ./artifact/package
+          mkdir -p ./artifact/buildinfo
+          rm -rf $(find ./bin/targets/ -type d -name "packages")
+          cp -rf $(find ./bin/targets/ -type f) ./artifact/firmware/
+          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          tar -zcvf generated_files.tgz  ./artifact
 
       - name: Create Release
         id: create_release
@@ -95,12 +106,22 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: Upload WasmEdge ipk
+#       - name: Upload WasmEdge ipk
+#         uses: actions/upload-release-asset@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           upload_url: ${{ steps.create_release.outputs.upload_url }}
+#           asset_path: ./WasmEdge_0.10.0_x86_64-ipk.tgz
+#           asset_name: WasmEdge_0.10.0_x86_64-ipk.tgz
+#           asset_content_type: application/x-tgz
+          
+      - name: Upload files tgz
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./WasmEdge_0.10.0_x86_64-ipk.tgz
-          asset_name: WasmEdge_0.10.0_x86_64-ipk.tgz
+          asset_path: ./generated_files.tgz
+          asset_name: generated_files.tgz
           asset_content_type: application/x-tgz
