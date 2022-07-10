@@ -102,7 +102,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: openwrt-wasmedge-0.10.0
-          release_name: openwrt-wasmedge-0.10.0
+          release_name: openwrt-wasmedge-generated
           draft: false
           prerelease: true
 
