@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
+          ref: 9dc86d19628f55bfed2048c412c5b23bda328cff
 
       - name: Space cleanup
         env:
